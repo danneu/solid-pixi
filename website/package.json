@@ -1,0 +1,34 @@
+{
+  "name": "solid-pixi-test",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
+  "dependencies": {
+    "@danneu/solid-pixi": "file:..",
+    "@shikijs/langs": "^3.4.2",
+    "@shikijs/themes": "^3.4.2",
+    "@solidjs/router": "^0.15.3",
+    "bootstrap": "^5.3.6",
+    "pixi-stats": "^4.2.0",
+    "pixi.js": "^8.9.2",
+    "shiki": "^3.4.2",
+    "solid-bootstrap": "^1.0.21",
+    "solid-js": "^1.9.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.27.0",
+    "gh-pages": "^6.3.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.32.1",
+    "vite": "^6.3.5",
+    "vite-plugin-solid": "^2.11.6"
+  }
+}

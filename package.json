@@ -19,7 +19,8 @@
   "sideEffects": false,
   "scripts": {
     "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix"
+    "lint:fix": "eslint src/ --fix",
+    "publish": "npm publish --access public"
   },
   "dependencies": {},
   "peerDependencies": {
