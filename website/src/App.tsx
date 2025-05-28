@@ -264,7 +264,11 @@ const Layout: Component<RouteSectionProps<unknown>> = (props) => {
 };
 
 function App() {
-  return <Router root={Layout}>{routes}</Router>;
+  return (
+    <Router root={Layout} base="/solid-pixi">
+      {routes}
+    </Router>
+  );
 }
 
 export default App;
