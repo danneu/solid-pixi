@@ -1,0 +1,1 @@
+import{t as e}from"./index-DX-aYNj7.js";var t=e("<div><p>This is a simple demo that shows how to use the <code>Sprite</code> component to display an image.");function a(){return t()}export{a as default};
