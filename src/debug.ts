@@ -1,7 +1,7 @@
 type LogType = "jsx" | "pixi";
 
 function isDebugEnabled(type: LogType): boolean {
-  const value = window.localStorage.getItem("pixi-solid");
+  const value = window.localStorage.getItem("solid-pixi");
   return value === "*" || value === type;
 }
 

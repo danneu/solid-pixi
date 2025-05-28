@@ -45,6 +45,7 @@ export function onTick(callback: PIXI.TickerCallback<unknown>) {
     app.ticker.remove(callback);
   });
 }
+
 const Stage: Component<{
   stage: PIXI.Container;
   children?: JSX.Element;
@@ -91,10 +92,10 @@ export const Application: Component<
   });
 
   onMount(() => {
-    console.log("Application mount");
+    console.log("Application mount", app());
     const currentApp = app();
     if (currentApp) {
-      props.ref?.(currentApp);
+      nodeProps.ref?.(currentApp);
     }
   });
 
@@ -113,7 +114,6 @@ export const Application: Component<
               ? nodeProps.onscreenCanvas
               : currentApp().canvas
           }
-
           <Stage stage={currentApp().stage}>{props.children}</Stage>
         </ApplicationContext.Provider>
       )}

@@ -11,15 +11,16 @@ export const {
   effect,
   spread,
 
-  // render,
-  // memo,
-  // createComponent,
-  // createElement,
-  // createTextNode,
-  // insertNode,
-  // setProp,
-  // mergeProps,
-  // use,
+  //
+  render,
+  memo,
+  createComponent,
+  createElement,
+  createTextNode,
+  insertNode,
+  setProp,
+  mergeProps,
+  use,
 } = createRenderer<Container>({
   createElement(type: string): Container {
     console.log("createElement", type);

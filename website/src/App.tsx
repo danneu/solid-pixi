@@ -153,7 +153,7 @@ const demos = [
 
 function createDemoRoute(demo: (typeof demos)[0]) {
   const importPath = `./pages${demo.path}`;
-  const LazyDemoComponent = lazy(() => import(`${importPath}.tsx`));
+  const LazyDemoComponent = lazy(demo.component);
   const LazyDescription = lazy(
     () =>
       import(`${importPath}.desc.tsx`).catch(() => {
