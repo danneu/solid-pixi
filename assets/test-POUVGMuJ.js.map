@@ -1,0 +1,1 @@
+{"version":3,"file":"test-POUVGMuJ.js","sources":["../../src/test.tsx"],"sourcesContent":["export default function () {\n  return <div>test component</div>;\n}\n"],"names":["_tmpl$"],"mappings":";;AAA2B,SAAA,OAAA;AACzB,SAAAA,OAAA;AACF;"}
