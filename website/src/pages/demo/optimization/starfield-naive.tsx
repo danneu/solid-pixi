@@ -76,7 +76,7 @@ const Example: Component<{ starCount: number }> = (props) => {
   const [cameraZ, setCameraZ] = createSignal(0);
 
   const [texture] = createResource(async () => {
-    return await PIXI.Assets.load("/img/star.png");
+    return await PIXI.Assets.load("/solid-pixi/img/star.png");
   });
 
   // move the camera forward
