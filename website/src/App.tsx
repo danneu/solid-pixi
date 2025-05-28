@@ -48,7 +48,8 @@ const demos: Demo[] = [
     path: "/demo/optimization/starfield-optimized",
     source: StarfieldOptimizedSource,
     component: () => import("./pages/demo/optimization/starfield-optimized"),
-    desc: () => import("./pages/demo/optimization/starfield-naive.desc.tsx"),
+    desc: () =>
+      import("./pages/demo/optimization/starfield-optimized.desc.tsx"),
   },
   {
     title: "Starfield (naive)",
@@ -223,15 +224,10 @@ const Sidebar: Component = () => {
   return (
     <>
       <h4 class="mb-4">
-        <a href="/" class="text-decoration-none">
+        <a href="/solid-pixi" class="text-decoration-none">
           @danneu/solid-pixi
         </a>
       </h4>
-      <Nav>
-        <Nav.Link as={A} href="/">
-          Home
-        </Nav.Link>
-      </Nav>
       <h5>demos</h5>
       <Nav class="flex-column">
         <For each={Array.from(demoGroups().keys())}>

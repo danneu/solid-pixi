@@ -1,7 +1,10 @@
-import { Application, onTick } from "@danneu/solid-pixi";
-import { useApp } from "@danneu/solid-pixi";
-import { Sprite } from "@danneu/solid-pixi";
-import { Container } from "@danneu/solid-pixi";
+import {
+  Application,
+  onTick,
+  useApp,
+  Sprite,
+  Container,
+} from "@danneu/solid-pixi";
 import * as PIXI from "pixi.js";
 import {
   createResource,
@@ -26,8 +29,8 @@ const Example: Component<{ texture: PIXI.Texture }> = (props) => {
       y={app.screen.height / 2}
       rotation={rotation()}
       ref={(el) => {
-        // Wait til container is mounted so that we get its width/height
-        // which are set dynamically based on its children size (bunnies)
+        // Wait til container is mounted so that we get its size
+        // after its children are mounted
         el.pivot.x = el.width / 2;
         el.pivot.y = el.height / 2;
       }}
