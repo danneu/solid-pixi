@@ -26,12 +26,21 @@ import ParticleContainerSource from "./pages/demo/basic/particle-container?raw";
 import { DemoPage } from "./components/DemoPage";
 import HomePage from "./pages/HomePage";
 
-const demos = [
+type Demo = {
+  title: string;
+  path: string;
+  source: string;
+  component: () => Promise<{ default: Component }>;
+  desc?: () => Promise<{ default: Component }>;
+};
+
+const demos: Demo[] = [
   {
     title: "Hello World",
     path: "/demo/hello-world",
     source: HelloWorldSource,
     component: () => import("./pages/demo/hello-world"),
+    desc: () => import("./pages/demo/hello-world.desc.tsx"),
   },
 
   {
@@ -39,12 +48,14 @@ const demos = [
     path: "/demo/optimization/starfield-optimized",
     source: StarfieldOptimizedSource,
     component: () => import("./pages/demo/optimization/starfield-optimized"),
+    desc: () => import("./pages/demo/optimization/starfield-naive.desc.tsx"),
   },
   {
     title: "Starfield (naive)",
     path: "/demo/optimization/starfield-naive",
     source: StarfieldNaiveSource,
     component: () => import("./pages/demo/optimization/starfield-naive"),
+    desc: () => import("./pages/demo/optimization/starfield-naive.desc.tsx"),
   },
 
   // BASIC
@@ -152,15 +163,9 @@ const demos = [
 ];
 
 function createDemoRoute(demo: (typeof demos)[0]) {
-  const importPath = `./pages${demo.path}`;
   const LazyDemoComponent = lazy(demo.component);
   const LazyDescription = lazy(
-    () =>
-      import(`${importPath}.desc.tsx`).catch(() => {
-        return {
-          default: () => null,
-        };
-      }) // Fallback if no description file
+    demo.desc || (() => Promise.resolve({ default: () => null }))
   );
 
   return {
