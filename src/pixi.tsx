@@ -54,7 +54,7 @@ const Stage: Component<{
   // insert(props.stage, () => props.children);
   insert(props.stage, props.children);
 
-  return undefined as unknown as JSX.Element;
+  return undefined;
 };
 
 export const Application: Component<
@@ -62,7 +62,9 @@ export const Application: Component<
     ref?: (el: PIXI.Application) => void;
     children?: JSX.Element;
     onscreenCanvas?: HTMLCanvasElement;
-  } & Partial<PIXI.ApplicationOptions>
+  } & Partial<
+    Omit<PIXI.ApplicationOptions, "children" | "ref" | "onscreenCanvas">
+  >
 > = (props) => {
   console.log("Application init", props);
 
@@ -121,245 +123,75 @@ export const Application: Component<
   );
 };
 
-export const Container: Component<
-  {
-    ref?: (el: PIXI.Container) => void;
-    children?: JSX.Element;
-    as?: PIXI.Container;
-  } & Omit<Partial<PIXI.ContainerOptions>, "children" | "ref">
-> = (_props) => {
-  const container = _props.as ?? new PIXI.Container();
-
-  const [nodeProps, pixiProps] = splitProps(_props, ["children", "ref"]);
-
-  // Object.assign(container, pixiProps);
-
-  effect(() => {
-    spread(container, pixiProps);
-    // Object.assign(container, pixiProps);
-  });
-
-  onMount(() => {
-    nodeProps.ref?.(container);
-  });
-
-  onCleanup(() => {
-    console.log("Container cleanup");
-    container.destroy();
-  });
-
-  insert(container, nodeProps.children);
-
-  return (() => container) as unknown as JSX.Element;
+type CommonProps<T> = {
+  ref?: (el: T) => void;
+  as?: T;
+  children?: JSX.Element;
 };
 
-export const Sprite: Component<
-  {
-    ref?: (el: PIXI.Sprite) => void;
-    as?: PIXI.Sprite;
-  } & Partial<PIXI.SpriteOptions>
-> = (props) => {
-  console.log("Sprite init", props);
-  const [_nodeProps, pixiProps] = splitProps(props, ["ref", "as"]);
+function factory<T extends PIXI.Container, P>(
+  PixiClass: new (props: P) => T
+): Component<
+  Partial<
+    // Need to omit any props that might appear in pixi props
+    Omit<P, "children">
+  > &
+    CommonProps<InstanceType<typeof PixiClass>>
+> {
+  return (props) => {
+    const [nodeProps, pixiProps] = splitProps(props, ["ref", "as", "children"]);
+    const instance = nodeProps.as ?? new PixiClass(pixiProps as P);
+    console.log(`${instance.constructor.name} init`);
 
-  const sprite = props.as ?? new PIXI.Sprite();
+    effect(() => {
+      spread(instance, pixiProps);
+    });
 
-  // Object.assign(sprite, pixiProps);
+    onMount(() => {
+      nodeProps.ref?.(instance);
+    });
 
-  effect(() => {
-    // Object.assign(sprite, pixiProps);
-    spread(sprite, pixiProps);
-  });
+    onCleanup(() => {
+      console.log(`${instance.constructor.name} cleanup`);
+      instance.destroy();
+    });
 
-  onMount(() => {
-    _nodeProps.ref?.(sprite);
-  });
+    insert(instance, nodeProps.children);
 
-  onCleanup(() => {
-    console.log("Sprite cleanup");
-    sprite.destroy();
-  });
+    return (() => instance) as unknown as JSX.Element;
+  };
+}
 
-  // Don't manually add to stage - let the renderer handle it
-  // app.stage.addChild(sprite);
+export const Container = factory<PIXI.Container, PIXI.ContainerOptions>(
+  PIXI.Container
+);
 
-  return (() => sprite) as unknown as JSX.Element;
-};
+export const Sprite = factory<PIXI.Sprite, PIXI.SpriteOptions>(PIXI.Sprite);
 
-export const Text: Component<
-  {
-    ref?: (el: PIXI.Text) => void;
-  } & Partial<PIXI.TextOptions>
-> = (props) => {
-  console.log("Text init", props);
-  const text = new PIXI.Text();
+export const Text = factory<PIXI.Text, PIXI.CanvasTextOptions>(PIXI.Text);
 
-  const [nodeProps, pixiProps] = splitProps(props, ["ref"]);
+export const TilingSprite = factory<
+  PIXI.TilingSprite,
+  PIXI.TilingSpriteOptions
+>(PIXI.TilingSprite);
 
-  // Object.assign(text, pixiProps);
+export const Graphics = factory<PIXI.Graphics, PIXI.GraphicsOptions>(
+  PIXI.Graphics
+);
 
-  effect(() => {
-    // Object.assign(text, pixiProps);
-    spread(text, pixiProps);
-  });
+export const AnimatedSprite = factory<
+  PIXI.AnimatedSprite,
+  PIXI.AnimatedSpriteOptions
+>(PIXI.AnimatedSprite);
 
-  onMount(() => {
-    nodeProps.ref?.(text);
-  });
+export const BitmapText = factory<PIXI.BitmapText, PIXI.TextOptions>(
+  PIXI.BitmapText
+);
 
-  onCleanup(() => {
-    console.log("Text cleanup");
-    text.destroy();
-  });
+export const MeshRope = factory<PIXI.MeshRope, PIXI.MeshRopeOptions>(
+  PIXI.MeshRope
+);
 
-  return (() => text) as unknown as JSX.Element;
-};
-
-export const TilingSprite: Component<
-  {
-    ref?: (el: PIXI.TilingSprite) => void;
-  } & PIXI.TilingSpriteOptions
-> = (props) => {
-  console.log("TilingSprite init", props);
-  const pixiElement = new PIXI.TilingSprite();
-
-  const [_nodeProps, pixiProps] = splitProps(props, ["ref"]);
-
-  // Object.assign(pixiElement, pixiProps);
-
-  effect(() => {
-    // Object.assign(pixiElement, pixiProps);
-    spread(pixiElement, pixiProps);
-  });
-
-  onCleanup(() => {
-    console.log("TilingSprite cleanup");
-    pixiElement.destroy();
-  });
-
-  return (() => pixiElement) as unknown as JSX.Element;
-};
-
-export const Graphics: Component<
-  {
-    ref?: (el: PIXI.Graphics) => void;
-  } & PIXI.GraphicsOptions
-> = (props) => {
-  const pixiElement = new PIXI.Graphics();
-
-  const [nodeProps, pixiProps] = splitProps(props, ["ref"]);
-
-  // Object.assign(pixiElement, pixiProps);
-
-  effect(() => {
-    // Object.assign(pixiElement, pixiProps);
-    spread(pixiElement, pixiProps);
-  });
-
-  onMount(() => {
-    nodeProps.ref?.(pixiElement);
-  });
-
-  onCleanup(() => {
-    console.log("Graphics cleanup");
-    pixiElement.destroy();
-  });
-
-  return (() => pixiElement) as unknown as JSX.Element;
-};
-
-export const AnimatedSprite: Component<
-  {
-    ref?: (el: PIXI.AnimatedSprite) => void;
-  } & PIXI.AnimatedSpriteOptions
-> = (props) => {
-  console.log("AnimatedSprite init", props);
-  const [_nodeProps, pixiProps] = splitProps(props, ["ref"]);
-
-  const pixiElement = new PIXI.AnimatedSprite(pixiProps);
-
-  effect(() => {
-    spread(pixiElement, pixiProps);
-  });
-
-  onMount(() => {
-    _nodeProps.ref?.(pixiElement);
-  });
-
-  onCleanup(() => {
-    console.log("AnimatedSprite cleanup");
-    pixiElement.destroy();
-  });
-
-  return (() => pixiElement) as unknown as JSX.Element;
-};
-
-export const BitmapText: Component<
-  {
-    ref?: (el: PIXI.BitmapText) => void;
-  } & PIXI.TextOptions
-> = (props) => {
-  console.log("BitmapText init", props);
-  const pixiElement = new PIXI.BitmapText();
-
-  const [_nodeProps, pixiProps] = splitProps(props, ["ref"]);
-
-  effect(() => {
-    spread(pixiElement, pixiProps);
-  });
-
-  onCleanup(() => {
-    console.log("BitmapText cleanup");
-    pixiElement.destroy();
-  });
-
-  return (() => pixiElement) as unknown as JSX.Element;
-};
-
-export const MeshRope: Component<
-  {
-    ref?: (el: PIXI.MeshRope) => void;
-  } & PIXI.MeshRopeOptions
-> = (props) => {
-  const [_nodeProps, pixiProps] = splitProps(props, ["ref"]);
-  const pixiElement = new PIXI.MeshRope(pixiProps);
-
-  effect(() => {
-    spread(pixiElement, pixiProps);
-  });
-
-  onMount(() => {
-    _nodeProps.ref?.(pixiElement);
-  });
-
-  onCleanup(() => {
-    console.log("MeshRope cleanup");
-    pixiElement.destroy();
-  });
-
-  return (() => pixiElement) as unknown as JSX.Element;
-};
-
-export const MeshPlane: Component<
-  {
-    ref?: (el: PIXI.MeshPlane) => void;
-  } & PIXI.MeshPlaneOptions
-> = (props) => {
-  const [_nodeProps, pixiProps] = splitProps(props, ["ref"]);
-  const pixiElement = new PIXI.MeshPlane(pixiProps);
-
-  effect(() => {
-    spread(pixiElement, pixiProps);
-  });
-
-  onMount(() => {
-    _nodeProps.ref?.(pixiElement);
-  });
-
-  onCleanup(() => {
-    console.log("MeshPlane cleanup");
-    pixiElement.destroy();
-  });
-
-  return (() => pixiElement) as unknown as JSX.Element;
-};
+export const MeshPlane = factory<PIXI.MeshPlane, PIXI.MeshPlaneOptions>(
+  PIXI.MeshPlane
+);

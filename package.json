@@ -2,13 +2,18 @@
   "name": "@danneu/solid-pixi",
   "version": "0.0.1",
   "description": "A library for declaratively using pixi.js from solidjs",
-  "type": "module",
+  "author": "danneu",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/danneu/solid-pixi.git"
   },
-  "author": "danneu",
-  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "keywords": [
     "solid",
     "solidjs",
@@ -35,14 +40,6 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.32.1"
-  },
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "exports": {
-    ".": {
-      "import": "./src/index.ts",
-      "require": "./src/index.ts"
-    }
   },
   "files": [
     "src/"
