@@ -1,5 +1,7 @@
 # @danneu/solid-pixi
 
+Live demo: https://danneu.github.io/solid-pixi/
+
 A library for declaratively using [pixi.js](https://pixijs.com/) from [solidjs](https://www.solidjs.com/).
 
 Similar to libraries like [@pixi/react](https://react.pixijs.io/) and [svelte-pixi](https://svelte-pixi.mattjennin.gs/).
