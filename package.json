@@ -20,6 +20,7 @@
   "scripts": {
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
+    "check": "tsc --noEmit",
     "publish": "npm publish --access public"
   },
   "dependencies": {},
